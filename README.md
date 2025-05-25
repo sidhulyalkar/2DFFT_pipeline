@@ -35,6 +35,8 @@ precision-fft-pipeline/
 │   ├── variables.tf
 │   └── outputs.tf
 ├── tests/                      # pytest tests
+├── input_images/               # input images
+├── output_images/              # output images
 ├── .gitignore
 ├── Makefile
 ├── requirements.txt
