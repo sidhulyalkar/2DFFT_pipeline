@@ -40,6 +40,8 @@ def compute_fft(image_path: str, output_magnitude_path: str, output_phase_path: 
     # Compute the magnitude spectrum log-scaled for better visibility
     magnitude_spectrum = np.log1p(np.abs(fft_shift))
 
+    mag_min, mag_max = magnitude_spectrum.min(), magnitude_spectrum.max()
+
     # Compute the phase spectrum
     phase_spectrum = np.angle(fft_shift)
 
@@ -54,6 +56,9 @@ def compute_fft(image_path: str, output_magnitude_path: str, output_phase_path: 
 
     # Create the output phase image
     create_and_save_image(phase_spectrum_normalized, output_phase_path)
+
+    # return mag_min and mag_max values for reconstruction(if needed)
+    return {"mag_min": float(mag_min), "mag_max": float(mag_max)}
 
 def normalize_spectrum(spectrum: np.ndarray) -> np.ndarray:
     """
@@ -76,11 +81,25 @@ def main():
     parser.add_argument("--metadata", dest="metadata_path", help="If provided, writable path to dump log-magnitude min/max JSON",)
     args = parser.parse_args()
     
-    compute_fft(args.input_png, args.output_magnitude, args.output_phase)
+    # compute fft and get metadata
+    metadata = compute_fft(
+        args.input_png,
+        args.output_magnitude,
+        args.output_phase,
+    )
+
+    # write metadata JSON only if asked
+    if args.metadata_path:
+        out_dir = os.path.dirname(args.metadata_path) or "."
+        os.makedirs(out_dir, exist_ok=True)
+        with open(args.metadata_path, "w") as f:
+            json.dump(metadata, f)
 
     print(f"FFT complete. Magnitude saved to {args.output_magnitude}")
     if args.output_phase:
         print(f"Phase saved to {args.output_phase}")
+    if args.metadata_path:
+        print(f"Metadata saved to {args.metadata_path}")
 
 if __name__ == '__main__':
     main()
