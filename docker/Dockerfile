@@ -1,8 +1,9 @@
+# syntax = docker/dockerfile:1.3
 # Multi-Staged Docker Build
 
 # Stage 1: Builder
 # Use slim base image for build step 
-FROM python:3.10-slim AS builder
+FROM --platform=linux/amd64 python:3.10-slim AS builder
 
 WORKDIR /build
 
@@ -22,7 +23,7 @@ RUN pip install \
         -r requirements.txt
 
 # Stage 2: Runtime
-FROM public.ecr.aws/lambda/python:3.10
+FROM --platform=linux/amd64 public.ecr.aws/lambda/python:3.10
 
 # Copy dependencies into Lambda's /opt/python path
 COPY --from=builder /build/deps /opt/python
@@ -34,9 +35,11 @@ COPY scripts/handler.py     /var/task/handler.py
 # Ensure unbuffered output
 ENV PYTHONUNBUFFERED=1
 
-# Add labels
+# Labels (still useful)
 LABEL maintainer="Sidharth Hulyalkar <sidsoccer21@gmail.com>" \
       description="2D-FFT Lambda for Precision pipeline"
 
 # Tell Lambda which function to invoke
 CMD ["handler.lambda_handler"]
+
+
