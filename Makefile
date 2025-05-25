@@ -11,7 +11,6 @@ MAG_OUTPUT := output_images/${IMAGE_NAME}_output_magnitude.png
 PHASE_OUTPUT := output_images/${IMAGE_NAME}_output_phase.png
 RECONSTRUCTED := output_images/${IMAGE_NAME}_output_reconstructed.png
 
-# S3 
 
 ## ⚙️ Setup virtual environment
 setup:
@@ -39,3 +38,20 @@ upload:
 clean:
 	rm -f output_*.png
 	rm -f $(RECONSTRUCTED)
+
+## 📐 Reformat code
+format:
+	.venv/bin/black .
+
+## 🚨 Lint for errors/style
+lint:
+	.venv/bin/flake8 fft_tool/ scripts/ tests/
+
+## 🔍 Static type‐check
+typecheck:
+	.venv/bin/mypy fft_tool/ scripts/ tests/
+
+## 🧪 Run tests
+test:
+	.venv/bin/pytest --maxfail=1 --disable-warnings -q
+
