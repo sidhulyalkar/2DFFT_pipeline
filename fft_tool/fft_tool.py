@@ -83,7 +83,7 @@ def main():
     
     # compute fft and get metadata
     metadata = compute_fft(
-        args.input_png,
+        args.input_image,
         args.output_magnitude,
         args.output_phase,
     )
