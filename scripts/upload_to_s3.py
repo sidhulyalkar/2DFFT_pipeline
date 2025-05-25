@@ -10,6 +10,7 @@ import boto3
 import os
 from botocore.exceptions import NoCredentialsError, ClientError
 
+
 def upload_png_to_s3(file_path, bucket_name, key):
     # Validate the file
     if not os.path.isfile(file_path):
@@ -28,6 +29,7 @@ def upload_png_to_s3(file_path, bucket_name, key):
     except ClientError as e:
         print(f"❌ Failed to upload: {e}")
 
+
 def main():
     parser = argparse.ArgumentParser(description="Upload a PNG file to S3")
     parser.add_argument("file_path", help="Path to the local PNG file")
@@ -36,6 +38,7 @@ def main():
     args = parser.parse_args()
 
     upload_png_to_s3(args.file_path, args.bucket_name, args.s3_key)
+
 
 if __name__ == "__main__":
     main()
