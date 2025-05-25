@@ -210,7 +210,7 @@ terraform destroy -var="account_id=$ACCOUNT_ID" -var="region=$AWS_REGION" -auto-
 ## 💡 Notes & Thought Process
 
 * **Core deliverables**: CLI tool, containerization, Terraform automation for S3→Lambda→S3.
-* **Metadata & Reconstruction**: Provided `--metadata` flag in `fft_tool.py` and a separate `reconstruct_from_fft.py` for offline inverse FFT. Omitting metadata write in Lambda keeps the pipeline focused and within the scope of this assessment. Further steps could be taken to automate the reconstruction piece of the pipeline.
+* **Metadata & Reconstruction**: Provided `--metadata` flag in `fft_tool.py` and a separate `reconstruct_from_fft.py` for offline inverse FFT. Omitting metadata write in Lambda keeps the pipeline focused and within the scope of this assessment. Further steps could be taken to automate the reconstruction piece of the pipeline. I thought to include this as a failsafe for the pipeline in case of accidental deletion, but that can be expanded on at a later time. 
 * **Container design**: Multi-stage build for minimal runtime; used AWS Lambda Python base image with the Runtime Interface Client; pinned to `linux/amd64` on Apple Silicon hosts.
 * **Infrastructure choices**:
 
