@@ -1,15 +1,42 @@
-# Use a slim Python image
-FROM python:3.10-slim
+# Multi-Staged Docker Build
 
-# Install dependencies
-RUN pip install --no-cache-dir numpy pillow
+# Stage 1: Builder
+# Use slim base image for build step 
+FROM python:3.10-slim AS builder
 
-# Copy in the FFT script
-WORKDIR /app
-COPY ../fft_tool/fft_tool.py .
+WORKDIR /build
 
-# Make script executable
-RUN chmod +x fft_tool.py
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# Default command: allow overriding via `docker run`
-ENTRYPOINT ["python", "fft_tool.py"]
+# Copy in requirements 
+COPY requirements.txt .
+
+# Install Python deps into a dedicated dir
+RUN pip install \
+        --no-cache-dir \
+        --upgrade \
+        --target=/build/deps \
+        -r requirements.txt
+
+# Stage 2: Runtime
+FROM public.ecr.aws/lambda/python:3.10
+
+# Copy dependencies into Lambda's /opt/python path
+COPY --from=builder /build/deps /opt/python
+
+# Copy fft_tool and handler into /var/task (Lambda's working dir)
+COPY fft_tool/fft_tool.py   /var/task/fft_tool.py
+COPY scripts/handler.py     /var/task/handler.py
+
+# Ensure unbuffered output
+ENV PYTHONUNBUFFERED=1
+
+# Add labels
+LABEL maintainer="Sidharth Hulyalkar <sidsoccer21@gmail.com>" \
+      description="2D-FFT Lambda for Precision pipeline"
+
+# Tell Lambda which function to invoke
+CMD ["handler.lambda_handler"]
