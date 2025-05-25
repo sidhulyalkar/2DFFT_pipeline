@@ -1,2 +1,6 @@
+# Core requirements for FFT processing
 numpy>=1.23.0
 Pillow>=9.0.0
+
+# S3 data upload requirement
+boto3>=1.26.0
