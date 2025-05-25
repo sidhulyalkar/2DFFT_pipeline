@@ -1,0 +1,50 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtualenv
+.venv/
+venv/
+env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+.terraform/
+
+# AWS credentials
+.aws/
+credentials
+config
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# Docker
+docker-compose.override.yml
+*.tar
+
+# Test outputs
+htmlcov/
+.coverage
+coverage.xml
+*.pytest_cache/
+
