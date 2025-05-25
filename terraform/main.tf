@@ -72,7 +72,7 @@ resource "aws_lambda_function" "fft_lambda" {
   image_uri     = "${aws_ecr_repository.fft_repo.repository_url}:latest"
   role          = aws_iam_role.lambda_exec.arn
   timeout       = 60
-  memory_size   = 512
+  memory_size   = 1024
 }
 
 # Allow S3 to invoke the Lambda function
